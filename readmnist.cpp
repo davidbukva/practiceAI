@@ -9,28 +9,34 @@
 
 using namespace std;
 
-int readmnistdata(int **training_data, int **test_data, int **validation_data){
+int readmnistdata(pair<int **,int *> *training_data, pair<int **, int *> *test_data, pair<int **, int *> *validation_data){
 	int fd;
     char cnumImgs[4];
-    char *buf;
+    char label;
     int numImgs;
+    int i,j;
 
 
-	if((fd = open("mnist",O_RDONLY)) == -1)return -1;
+
+	if((fd = open("mnisttestlabels",O_RDONLY)) == -1)return -1;
     
     read(fd,cnumImgs,4);
     read(fd,cnumImgs,4);
 
-    
     numImgs=cnumImgs[0]*16*16*16*16*16*16 + cnumImgs[1]*16*16*16*16 + cnumImgs[2]*16*16 + cnumImgs[3];
+    
+    test_data = (pair<int **, int *> *)malloc(numImgs*794);
 
-    buf=(char *)malloc(numImgs);
-
-	if(read(fd,buf,numImgs)==-1)return -1;
-    cout << (int)buf[0] << endl;
+    for(i = 0; i < numImgs; i++){
+        if(read(fd,&label,1)==-1)return -1;
+        for(j = 0; j < 10; j++){
+            test_data[i].second[j]=0;
+        }
+        test_data[i].second[label]=1;
+    }
         
+
 	close(fd);
-    free(buf);
 
 	return 0;
 	
@@ -38,9 +44,14 @@ int readmnistdata(int **training_data, int **test_data, int **validation_data){
 }
 
 int main(){
-	int **training_data,**test_data, **validation_data;
+	pair<int **, int *> *training_data, *test_data, *validation_data;
 
-	readmnistdata(training_data, test_data, validation_data);
-
+	if(readmnistdata(training_data, test_data, validation_data)==-1){
+        cerr << "Failed to read" << endl; 
+        return -1;
+    }
+    for(int i = 0; i < 10; i++){
+        cout << test_data[0].second[i] << " ";
+    }cout << endl;
 	return 0;
 }
