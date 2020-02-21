@@ -1,3 +1,6 @@
+#ifndef MATRIX_H
+#define MATRIX_H
+
 #include <cstdlib>
 #include <iostream>
 
@@ -19,9 +22,13 @@ struct matrix{
 		}
     }
 
-	matrix(const matrix &mat){
-		matrix(mat.n,mat.m,mat.data);
+	matrix(){
+		
 	}
+
+	/*matrix(const matrix &mat){*/
+	/*matrix(mat.n,mat.m,mat.data);*/
+	/*}*/
 
 	matrix(int _n, int _m, int **_data): n(_n), m(_m){
 		data = (int **)malloc(m*sizeof(int *));
@@ -31,6 +38,10 @@ struct matrix{
 				data[i][j]=_data[i][j];
 			}
 		}
+	}
+
+	int *get(int pos){
+		return operator[](pos);
 	}
     
 	int *operator[](int pos){
@@ -52,3 +63,5 @@ struct matrix{
 
 
 };
+
+#endif /* MATRIX_H */
