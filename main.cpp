@@ -9,22 +9,12 @@ using namespace std;
 
 int main(){
 	
-
-	mnist training_data, test_data, validation_data;
-	if(readmnistdata(&training_data, &test_data, &validation_data)==-1){
-        cerr << "Failed to read" << endl; 
-        return -1;
-    }
-	
-
-	//cout << test_data->numData << endl;
-	//cout << test_data.numData << endl;
-	//for(int i = 0; i < 10; i++){
-	//cout << test_data->labels[0] << endl;
-	//}
-	
-
-	
-	
+	mnist *training_data = (mnist *)malloc(sizeof(mnist));
+	mnist *test_data = (mnist *)malloc(sizeof(mnist));
+	mnist *validation_data = (mnist *)malloc(sizeof(mnist));
+	if(readmnistdata(training_data, test_data, validation_data)==-1){
+		cerr << "Failed to read" << endl; 
+		return -1;
+	}
 
 }

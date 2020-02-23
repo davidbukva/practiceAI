@@ -10,17 +10,17 @@ struct matrix{
     int n;
     int m;
 
-    int **data;
+    unsigned char *data;
 
     matrix(int _n, int _m): n(_n),m(_m){
-        data = (int **)malloc(m*sizeof(int *));
-		for(int i = 0; i < m; i++){
-			data[i] = (int *)malloc(n*sizeof(int));
-			for(int j = 0; j < n; j++){
-				data[i][j]=0;
-			}
-		}
+        data = (unsigned char *)malloc(m*n);
     }
+
+	void init(int _n, int _m){
+		n=_n;
+		m=_m;
+        data = (unsigned char *)malloc(m*n);
+	}
 
 	matrix(){
 		
@@ -30,28 +30,29 @@ struct matrix{
 	/*matrix(mat.n,mat.m,mat.data);*/
 	/*}*/
 
-	matrix(int _n, int _m, int **_data): n(_n), m(_m){
-		data = (int **)malloc(m*sizeof(int *));
-		for(int i = 0; i < m; i++){
-			data[i] = (int *)malloc(n*sizeof(int));
-			for(int j = 0; j < n; j++){
-				data[i][j]=_data[i][j];
-			}
-		}
-	}
+	/*matrix(int _n, int _m, int **_data): n(_n), m(_m){*/
+	/*data = (int **)malloc(m*sizeof(int *));*/
+	/*for(int i = 0; i < m; i++){*/
+	/*data[i] = (int *)malloc(n*sizeof(int));*/
+	/*for(int j = 0; j < n; j++){*/
+	/*data[i][j]=_data[i][j];*/
+	/*}*/
+	/*}*/
+	/*}*/
 
-	int *get(int pos){
+	unsigned char *get(int pos){
 		return operator[](pos);
 	}
     
-	int *operator[](int pos){
-		return data[pos];
+	unsigned char *operator[](int pos){
+		return (data+pos*n);
 	}
 
 	void print(){
 		for(int i = 0; i < m; i++){
 			for(int j = 0; j < n; j++){
-				std::cout << data[i][j] << " ";
+			int ind = i*n+j;
+				std::cout << (int)data[ind] << " ";
 			}std::cout << "\n";
 		}
 	}
