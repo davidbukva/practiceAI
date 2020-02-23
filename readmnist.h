@@ -7,7 +7,6 @@
 #include <unistd.h>
 #include <iostream>
 #include <stdlib.h>
-#include <stdio.h>
 #include "matrix.h"
 
 
@@ -33,11 +32,10 @@ struct mnist{
 
 
 	
-	/*~mnist(){*/
-	/*free(imgs);*/
-	/*free(labels);*/
-	/*std::cout << "destructed mnist" << std::endl;*/
-	/*}*/
+	~mnist(){
+		free(imgs);
+		free(labels);
+	}
 };
 
 
