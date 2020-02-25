@@ -20,7 +20,10 @@ int main(){
 		return -1;
 	}
 	
-    
+    matrix<int> m(2,2);
+    m.print();
+    m[1][0]=2;
+    m.print();    
 
 
 }

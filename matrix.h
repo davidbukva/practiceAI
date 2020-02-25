@@ -32,6 +32,14 @@ struct vector{
         }
     }
 
+    vector<T> operator-(vector<T> other){
+        vector<T> ret;
+        for(int i = 0; i < n; i++){
+            ret[i]=data[i]-other[i];
+        }
+        return ret;
+    }
+
     T& operator[](int pos){
         return data[pos];
     }
@@ -60,7 +68,7 @@ struct matrix{
 	void init(int _n, int _m){
 		n=_n;
 		m=_m;
-        data = (T *)malloc(m*n);
+        data.init(n, vector<T>(m));
 	}
 
 	matrix(){
@@ -92,15 +100,11 @@ struct matrix{
 	void print(){
 		for(int i = 0; i < m; i++){
 			for(int j = 0; j < n; j++){
-			int ind = i*n+j;
-				std::cout << (int)data[ind] << " ";
+				std::cout << (int)data[i][j] << " ";
 			}std::cout << "\n";
 		}
 	}
 
-	~matrix(){
-		free(data);
-	}
 
 
 

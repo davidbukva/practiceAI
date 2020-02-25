@@ -7,27 +7,27 @@
 
 struct net{
 
-	vector<vector<vector<double>>> w;
-	vector<vector<double>> b;
+	vector<matrix<double>> w;
+    matrix<double> b;
 
 	int nlayers;
 	vector<int> layers;
 
-	net(vector<int> _layers){
+	net(int _nlayers, int *_layers){
 		srand(time(nullptr));
 		nlayers = _layers.size();
 		/*layers=_layers;*/
-		layers.resize(nlayers);
+		layers.init(nlayers);
 		for(int i = 0; i < nlayers; i++){
 			layers[i]=_layers[i];
 		}
-		w.resize(nlayers);
-		b.resize(nlayers);
+		w.init(nlayers);
+		b.init(nlayers);
 		for(int i = 1; i < nlayers; i++){
-			b[i].resize(layers[i]);
-			w[i].resize(layers[i]);
+			b[i].init(layers[i]);
+			w[i].init(layers[i]);
 			for(int j = 0; j < layers[i]; j++){
-				w[i][j].resize(layers[i-1]);
+				w[i][j].init(layers[i-1]);
 				for(int k = 0; k < layers[i-1];k++){
 					double num = (rand()%10-5);
 					if(num == 0)num++;
@@ -37,11 +37,12 @@ struct net{
 		}
 	}
 
+
 	void calculategrad(const vector<vector<double>>& in, const vector<vector<double>> &des, vector<vector<vector<double>>> *nablaCW, vector<vector<double>> *nablaCB){
 		for(int i = 1; i < nlayers; i++){
-			(*nablaCB)[i].resize(layers[i]);
+			(*nablaCB)[i].init(layers[i]);
 			for(int j = 0; j < layers[i]; j++){
-				(*nablaCW)[i][j].resize(layers[i-1]);
+				(*nablaCW)[i][j].init(layers[i-1]);
 			}
 		}
 	}
@@ -96,8 +97,7 @@ struct net{
 	double cost(vector<vector<double>> &inputs, vector<vector<double>> &desired){
 		double sum = 0;
 		for(int i = 0; i < inputs.size(); i++){
-			vector<double> out = output(inputs[i]);
-			sum += squarev(subv(desired[i],out));
+			sum += squarev(desired[i]-output(inputs[i]));
 		}
 		sum/=2*inputs.size();
 		return sum;
@@ -110,12 +110,12 @@ struct net{
 		
 		vector<vector<double>> vals(nlayers);
 		/*vals[0]=input;*/
-		vals[0].resize(input.size());
+		vals[0].init(input.size());
 		for(int j = 0; j < input.size(); j++){
 			vals[0][j]=input[j];
 		}
 		for(int i = 1; i < nlayers; i++){
-		vals[i].resize(layers[i]);
+		vals[i].init(layers[i]);
 			for(int j = 0; j < layers[i]; j++){
 				vals[i][j]=b[i][j];
 				for(int k = 0; k < layers[i-1]; k++){

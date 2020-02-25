@@ -1,0 +1,163 @@
+In file included from main.cpp:7:
+net.h: In constructor 'net::net(int, int*)':
+net.h:18:21: error: request for member 'size' in '_layers', which is of non-class type 'int*'
+   18 |   nlayers = _layers.size();
+      |                     ^~~~
+net.h:25:17: error: no matching function for call to 'matrix<double>::init(int&)'
+   25 |   b.init(nlayers);
+      |                 ^
+In file included from main.cpp:5:
+matrix.h:68:7: note: candidate: 'void matrix<T>::init(int, int) [with T = double]'
+   68 |  void init(int _n, int _m){
+      |       ^~~~
+matrix.h:68:7: note:   candidate expects 2 arguments, 1 provided
+In file included from main.cpp:7:
+net.h:27:9: error: request for member 'init' in '((net*)this)->net::b.matrix<double>::operator[](i)', which is of non-class type 'double'
+   27 |    b[i].init(layers[i]);
+      |         ^~~~
+net.h:28:23: error: no matching function for call to 'matrix<double>::init(int&)'
+   28 |    w[i].init(layers[i]);
+      |                       ^
+In file included from main.cpp:5:
+matrix.h:68:7: note: candidate: 'void matrix<T>::init(int, int) [with T = double]'
+   68 |  void init(int _n, int _m){
+      |       ^~~~
+matrix.h:68:7: note:   candidate expects 2 arguments, 1 provided
+In file included from main.cpp:7:
+net.h:30:13: error: request for member 'init' in '(&((net*)this)->net::w.vector<matrix<double> >::operator[](i))->matrix<double>::operator[](j)', which is of non-class type 'double'
+   30 |     w[i][j].init(layers[i-1]);
+      |             ^~~~
+net.h:34:15: error: invalid types 'double[int]' for array subscript
+   34 |      w[i][j][k]=1.0/num;
+      |               ^
+In file included from main.cpp:7:
+net.h: In member function 'void net::train(int, double, const vector<vector<double> >&, const vector<vector<double> >&, int)':
+net.h:58:37: error: 'struct matrix<double>' has no member named 'size'
+   58 |    vector<vector<double>> nablaCB(b.size());
+      |                                     ^~~~
+net.h:60:45: error: passing 'const vector<vector<double> >' as 'this' argument discards qualifiers [-fpermissive]
+   60 |    for(int minibi = 0; minibi < inputs.size()-minibsize; minibi+=minibsize){
+      |                                             ^
+In file included from main.cpp:5:
+matrix.h:47:9: note:   in call to 'int vector<T>::size() [with T = vector<double>]'
+   47 |     int size(){
+      |         ^~~~
+In file included from main.cpp:7:
+net.h:63:39: error: 'struct matrix<double>' has no member named 'size'
+   63 |     vector<vector<double>> nablaCBx(b.size());
+      |                                       ^~~~
+net.h:68:37: error: passing 'const vector<vector<double> >' as 'this' argument discards qualifiers [-fpermissive]
+   68 |      in[minibj]=inputs[minibi+minibj];
+      |                                     ^
+In file included from main.cpp:5:
+matrix.h:43:8: note:   in call to 'T& vector<T>::operator[](int) [with T = vector<double>]'
+   43 |     T& operator[](int pos){
+      |        ^~~~~~~~
+In file included from main.cpp:7:
+net.h:69:39: error: passing 'const vector<vector<double> >' as 'this' argument discards qualifiers [-fpermissive]
+   69 |      des[minibj]=desired[minibi+minibj];
+      |                                       ^
+In file included from main.cpp:5:
+matrix.h:43:8: note:   in call to 'T& vector<T>::operator[](int) [with T = vector<double>]'
+   43 |     T& operator[](int pos){
+      |        ^~~~~~~~
+In file included from main.cpp:7:
+net.h:87:12: error: invalid types 'double[int]' for array subscript
+   87 |      b[i][j]-=eta*nablaCB[i][j];
+      |            ^
+net.h:89:16: error: invalid types 'double[int]' for array subscript
+   89 |       w[i][j][k]-=eta*nablaCW[i][j][k];
+      |                ^
+net.h: In member function 'vector<double> net::output(const vector<double>&)':
+net.h:113:27: error: passing 'const vector<double>' as 'this' argument discards qualifiers [-fpermissive]
+  113 |   vals[0].init(input.size());
+      |                           ^
+In file included from main.cpp:5:
+matrix.h:47:9: note:   in call to 'int vector<T>::size() [with T = double]'
+   47 |     int size(){
+      |         ^~~~
+In file included from main.cpp:7:
+net.h:114:33: error: passing 'const vector<double>' as 'this' argument discards qualifiers [-fpermissive]
+  114 |   for(int j = 0; j < input.size(); j++){
+      |                                 ^
+In file included from main.cpp:5:
+matrix.h:47:9: note:   in call to 'int vector<T>::size() [with T = double]'
+   47 |     int size(){
+      |         ^~~~
+In file included from main.cpp:7:
+net.h:115:22: error: passing 'const vector<double>' as 'this' argument discards qualifiers [-fpermissive]
+  115 |    vals[0][j]=input[j];
+      |                      ^
+In file included from main.cpp:5:
+matrix.h:43:8: note:   in call to 'T& vector<T>::operator[](int) [with T = double]'
+   43 |     T& operator[](int pos){
+      |        ^~~~~~~~
+In file included from main.cpp:7:
+net.h:120:22: error: invalid types 'double[int]' for array subscript
+  120 |     vals[i][j]=b[i][j];
+      |                      ^
+net.h:122:40: error: invalid types 'double[int]' for array subscript
+  122 |      vals[i][j]+=vals[i-1][k]*w[i][j][k];
+      |                                        ^
+main.cpp: In function 'int main()':
+main.cpp:25:11: error: invalid types 'int[int]' for array subscript
+   25 |     m[1][0]=2;
+      |           ^
+In file included from main.cpp:5:
+matrix.h: In instantiation of 'matrix<T>::~matrix() [with T = double]':
+net.h:16:33:   required from here
+matrix.h:110:8: error: cannot convert 'vector<vector<double> >' to 'void*'
+  110 |   free(data);
+      |        ^~~~
+      |        |
+      |        vector<vector<double> >
+In file included from /usr/include/c++/9.2.1/cstdlib:75,
+                 from /usr/include/c++/9.2.1/ext/string_conversions.h:41,
+                 from /usr/include/c++/9.2.1/bits/basic_string.h:6493,
+                 from /usr/include/c++/9.2.1/string:55,
+                 from /usr/include/c++/9.2.1/bits/locale_classes.h:40,
+                 from /usr/include/c++/9.2.1/bits/ios_base.h:41,
+                 from /usr/include/c++/9.2.1/ios:42,
+                 from /usr/include/c++/9.2.1/ostream:38,
+                 from /usr/include/c++/9.2.1/iostream:39,
+                 from main.cpp:2:
+/usr/include/stdlib.h:565:25: note:   initializing argument 1 of 'void free(void*)'
+  565 | extern void free (void *__ptr) __THROW;
+      |                   ~~~~~~^~~~~
+In file included from main.cpp:5:
+matrix.h: In instantiation of 'T& matrix<T>::operator[](int) [with T = double]':
+net.h:27:7:   required from here
+matrix.h:97:18: error: invalid initialization of reference of type 'double&' from expression of type 'vector<double>'
+   97 |   return data[pos];
+      |                  ^
+matrix.h: In instantiation of 'matrix<T>::~matrix() [with T = int]':
+main.cpp:23:22:   required from here
+matrix.h:110:8: error: cannot convert 'vector<vector<int> >' to 'void*'
+  110 |   free(data);
+      |        ^~~~
+      |        |
+      |        vector<vector<int> >
+In file included from /usr/include/c++/9.2.1/cstdlib:75,
+                 from /usr/include/c++/9.2.1/ext/string_conversions.h:41,
+                 from /usr/include/c++/9.2.1/bits/basic_string.h:6493,
+                 from /usr/include/c++/9.2.1/string:55,
+                 from /usr/include/c++/9.2.1/bits/locale_classes.h:40,
+                 from /usr/include/c++/9.2.1/bits/ios_base.h:41,
+                 from /usr/include/c++/9.2.1/ios:42,
+                 from /usr/include/c++/9.2.1/ostream:38,
+                 from /usr/include/c++/9.2.1/iostream:39,
+                 from main.cpp:2:
+/usr/include/stdlib.h:565:25: note:   initializing argument 1 of 'void free(void*)'
+  565 | extern void free (void *__ptr) __THROW;
+      |                   ~~~~~~^~~~~
+In file included from main.cpp:5:
+matrix.h: In instantiation of 'void matrix<T>::print() [with T = int]':
+main.cpp:24:13:   required from here
+matrix.h:104:18: error: invalid cast from type 'vector<int>' to type 'int'
+  104 |     std::cout << (int)data[ind] << " ";
+      |                  ^~~~~~~~~~
+matrix.h: In instantiation of 'T& matrix<T>::operator[](int) [with T = int]':
+main.cpp:25:8:   required from here
+matrix.h:97:18: error: invalid initialization of reference of type 'int&' from expression of type 'vector<int>'
+   97 |   return data[pos];
+      |                  ^
