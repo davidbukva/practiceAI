@@ -8,28 +8,19 @@
 struct net{
 
 	vector<matrix<double>> w;
-    matrix<double> b;
+    vector<vector<double>> b;
 
 	int nlayers;
 	vector<int> layers;
 
-	net(int _nlayers, int *_layers){
+	net(std::initializer_list<int> _layers){
 		srand(time(nullptr));
-		nlayers = _nlayers;
-		layers.init(nlayers);
+		nlayers = _layers.size();
+		layers.init(_nlayers) = _layers;
 		w.init(nlayers);
 		b.init(nlayers, _layers);
 		for(int i = 1; i < nlayers; i++){
-			b[i].init(layers[i]);
-			w[i].init(layers[i]);
-			for(int j = 0; j < layers[i]; j++){
-				w[i][j].init(layers[i-1]);
-				for(int k = 0; k < layers[i-1];k++){
-					double num = (rand()%10-5);
-					if(num == 0)num++;
-					w[i][j][k]=1.0/num;
-				}
-			}
+			w[i].init(layers[i],layers[i-1]);
 		}
 	}
 
@@ -47,45 +38,9 @@ struct net{
 	void train(int epochs, double eta,const vector<vector<double>> &inputs, const vector<vector<double>> &desired, int minibsize){
 		for(int epoch = 0; epoch < epochs; epoch++){
 
-			cout << "epoch start: " << epoch << endl;
 			//TODO: random shuffle
 			
-			vector<vector<vector<double>>> nablaCW(w.size());
-			vector<vector<double>> nablaCB(b.size());
-
-			for(int minibi = 0; minibi < inputs.size()-minibsize; minibi+=minibsize){		
-
-				vector<vector<vector<double>>> nablaCWx(w.size());
-				vector<vector<double>> nablaCBx(b.size());
-				vector<vector<double>> in(minibsize);
-				vector<vector<double>> des(minibsize);
-
-				for(int minibj = 0; minibj < minibsize; minibj++){
-					in[minibj]=inputs[minibi+minibj];
-					des[minibj]=desired[minibi+minibj];
-				}
-				
-				calculategrad(in,des,&nablaCW,&nablaCB);
-
-
-			for(int i = 1; i < nlayers; i++){
-				for(int j = 0; j < layers[i]; j++){
-					nablaCB[i][j]+=nablaCBx[i][j];
-					for(int k = 0; k < layers[i-1]; k++){
-						nablaCW[i][j][k]+=nablaCWx[i][j][k];
-					}
-				}
-			}
-
-			}
-			for(int i = 1; i < nlayers; i++){
-				for(int j = 0; j < layers[i]; j++){
-					b[i][j]-=eta*nablaCB[i][j];
-					for(int k = 0; k < layers[i-1]; k++){
-						w[i][j][k]-=eta*nablaCW[i][j][k];
-					}
-				}
-			}
+			
 		}
 	}
 
@@ -95,39 +50,37 @@ struct net{
 		for(int i = 0; i < inputs.size(); i++){
 			sum += squarev(desired[i]-output(inputs[i]));
 		}
-		sum/=2*inputs.size();
-		return sum;
+		return sum/(2*inputs.size());
 	}
 		
 
 	
 
-	vector<double> output(const vector<double> &input){
+	vector<double> output(vector<double> input){
 		
-		vector<vector<double>> vals(nlayers);
-		/*vals[0]=input;*/
-		vals[0].init(input.size());
-		for(int j = 0; j < input.size(); j++){
-			vals[0][j]=input[j];
-		}
-		for(int i = 1; i < nlayers; i++){
-		vals[i].init(layers[i]);
-			for(int j = 0; j < layers[i]; j++){
-				vals[i][j]=b[i][j];
-				for(int k = 0; k < layers[i-1]; k++){
-					vals[i][j]+=vals[i-1][k]*w[i][j][k];
-				}
-				vals[i][j]=sigmoid(vals[i][j]);
-			}
+		vector<double> a(layers[0]);
+		a=input;
+		for(int l = 1; l < nlayers; l++){
+			a=sigmoid(w[l]*a+b[l]);
 		}
 
-		return vals[nlayers-1];
+		return a;
 
 	}
 
 
+	
+
 	double sigmoid(double in){
 		return 1.0/(1.0+exp(-in));
+	}
+
+	vector<double> sigmoid(vector<double> in){
+		vector<double> ret;
+		for(int i = 0; i < in.size(); i++){
+			ret[i]=sigmoid(in[i]);
+		}
+		return ret;
 	}
 
 	vector<double> subv(vector<double> one, vector<double> two){

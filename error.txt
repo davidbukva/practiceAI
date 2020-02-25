@@ -1,78 +1,23 @@
-In file included from main.cpp:7:
-net.h: In constructor 'net::net(int, int*)':
-net.h:18:21: error: request for member 'size' in '_layers', which is of non-class type 'int*'
-   18 |   nlayers = _layers.size();
-      |                     ^~~~
-net.h:25:17: error: no matching function for call to 'matrix<double>::init(int&)'
-   25 |   b.init(nlayers);
-      |                 ^
 In file included from main.cpp:5:
-matrix.h:77:7: note: candidate: 'void matrix<T>::init(int, int) [with T = double]'
-   77 |  void init(int _n, int _m){
-      |       ^~~~
-matrix.h:77:7: note:   candidate expects 2 arguments, 1 provided
-In file included from main.cpp:7:
-net.h:28:23: error: no matching function for call to 'matrix<double>::init(int&)'
-   28 |    w[i].init(layers[i]);
-      |                       ^
-In file included from main.cpp:5:
-matrix.h:77:7: note: candidate: 'void matrix<T>::init(int, int) [with T = double]'
-   77 |  void init(int _n, int _m){
-      |       ^~~~
-matrix.h:77:7: note:   candidate expects 2 arguments, 1 provided
-In file included from main.cpp:7:
-net.h: In member function 'void net::train(int, double, const vector<vector<double> >&, const vector<vector<double> >&, int)':
-net.h:58:37: error: 'struct matrix<double>' has no member named 'size'
-   58 |    vector<vector<double>> nablaCB(b.size());
-      |                                     ^~~~
-net.h:60:45: error: passing 'const vector<vector<double> >' as 'this' argument discards qualifiers [-fpermissive]
-   60 |    for(int minibi = 0; minibi < inputs.size()-minibsize; minibi+=minibsize){
-      |                                             ^
-In file included from main.cpp:5:
-matrix.h:56:9: note:   in call to 'int vector<T>::size() [with T = vector<double>]'
-   56 |     int size(){
-      |         ^~~~
-In file included from main.cpp:7:
-net.h:63:39: error: 'struct matrix<double>' has no member named 'size'
-   63 |     vector<vector<double>> nablaCBx(b.size());
-      |                                       ^~~~
-net.h:68:37: error: passing 'const vector<vector<double> >' as 'this' argument discards qualifiers [-fpermissive]
-   68 |      in[minibj]=inputs[minibi+minibj];
-      |                                     ^
-In file included from main.cpp:5:
-matrix.h:43:8: note:   in call to 'T& vector<T>::operator[](int) [with T = vector<double>]'
-   43 |     T& operator[](int pos){
-      |        ^~~~~~~~
-In file included from main.cpp:7:
-net.h:69:39: error: passing 'const vector<vector<double> >' as 'this' argument discards qualifiers [-fpermissive]
-   69 |      des[minibj]=desired[minibi+minibj];
-      |                                       ^
-In file included from main.cpp:5:
-matrix.h:43:8: note:   in call to 'T& vector<T>::operator[](int) [with T = vector<double>]'
-   43 |     T& operator[](int pos){
-      |        ^~~~~~~~
-In file included from main.cpp:7:
-net.h: In member function 'vector<double> net::output(const vector<double>&)':
-net.h:113:27: error: passing 'const vector<double>' as 'this' argument discards qualifiers [-fpermissive]
-  113 |   vals[0].init(input.size());
-      |                           ^
-In file included from main.cpp:5:
-matrix.h:56:9: note:   in call to 'int vector<T>::size() [with T = double]'
-   56 |     int size(){
-      |         ^~~~
-In file included from main.cpp:7:
-net.h:114:33: error: passing 'const vector<double>' as 'this' argument discards qualifiers [-fpermissive]
-  114 |   for(int j = 0; j < input.size(); j++){
-      |                                 ^
-In file included from main.cpp:5:
-matrix.h:56:9: note:   in call to 'int vector<T>::size() [with T = double]'
-   56 |     int size(){
-      |         ^~~~
-In file included from main.cpp:7:
-net.h:115:22: error: passing 'const vector<double>' as 'this' argument discards qualifiers [-fpermissive]
-  115 |    vals[0][j]=input[j];
+matrix.h: In member function ‘vector<T>& vector<T>::init(std::initializer_list<int>)’:
+matrix.h:43:22: error: no match for ‘operator[]’ (operand types are ‘std::initializer_list<int>’ and ‘int’)
+   43 |    data[i].init(sizes[i]);
       |                      ^
+In file included from main.cpp:7:
+net.h: In constructor ‘net::net(int, std::initializer_list<int>)’:
+net.h:21:26: error: call of overloaded ‘init(int&, std::initializer_list<int>&)’ is ambiguous
+   21 |   b.init(nlayers, _layers);
+      |                          ^
 In file included from main.cpp:5:
-matrix.h:43:8: note:   in call to 'T& vector<T>::operator[](int) [with T = double]'
-   43 |     T& operator[](int pos){
-      |        ^~~~~~~~
+matrix.h:48:13: note: candidate: ‘vector<T>& vector<T>::init(int, vector<int>) [with T = vector<double>]’
+   48 |  vector<T>& init(int _n, vector<int> sizes){
+      |             ^~~~
+matrix.h:53:13: note: candidate: ‘vector<T>& vector<T>::init(int, T) [with T = vector<double>]’
+   53 |  vector<T>& init(int _n, T copy){
+      |             ^~~~
+matrix.h: In instantiation of ‘vector<T>& vector<T>::init(std::initializer_list<int>) [with T = int]’:
+matrix.h:19:3:   required from ‘vector<T>::vector(std::initializer_list<int>) [with T = int]’
+net.h:19:27:   required from here
+matrix.h:43:12: error: request for member ‘init’ in ‘*(((vector<int>*)this)->vector<int>::data + ((sizetype)(((long unsigned int)i) * 4)))’, which is of non-class type ‘int’
+   43 |    data[i].init(sizes[i]);
+      |    ~~~~~~~~^~~~
