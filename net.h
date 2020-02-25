@@ -15,14 +15,10 @@ struct net{
 
 	net(int _nlayers, int *_layers){
 		srand(time(nullptr));
-		nlayers = _layers.size();
-		/*layers=_layers;*/
+		nlayers = _nlayers;
 		layers.init(nlayers);
-		for(int i = 0; i < nlayers; i++){
-			layers[i]=_layers[i];
-		}
 		w.init(nlayers);
-		b.init(nlayers);
+		b.init(nlayers, _layers);
 		for(int i = 1; i < nlayers; i++){
 			b[i].init(layers[i]);
 			w[i].init(layers[i]);

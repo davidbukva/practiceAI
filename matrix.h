@@ -44,6 +44,15 @@ struct vector{
         return data[pos];
     }
 
+    vector<T> operator=(vector<T> other){
+        init(n);
+        for(int i = 0; i < n; i++){
+            data[i]=other[i];
+        }
+        return *this;
+    }
+
+
     int size(){
         return n;
     }
@@ -93,14 +102,14 @@ struct matrix{
 		return operator[](pos);
 	}
     
-	T& operator[](int pos){
+	vector<T>& operator[](int pos){
 		return data[pos];
 	}
 
 	void print(){
 		for(int i = 0; i < m; i++){
 			for(int j = 0; j < n; j++){
-				std::cout << (int)data[i][j] << " ";
+				std::cout << (int)data[j][i] << " ";
 			}std::cout << "\n";
 		}
 	}
