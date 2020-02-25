@@ -14,28 +14,24 @@ struct mnist{
 
 	int numData;
 
-	matrix *imgs;
-	matrix *labels;
+	vector<vector<unsigned char>> imgs;
+	vector<vector<unsigned char>> labels;
 
 	void init(int _numData){
 		
 		numData = _numData;
 
-		imgs = (matrix *)malloc(_numData*sizeof(matrix));
-		labels = (matrix *)malloc(_numData*sizeof(matrix));
+        imgs.init(_numData);
+        labels.init(_numData);
 
 		for(int i = 0; i < _numData; i++){
-			imgs[i].init(1,784);
-			labels[i].init(1,10);
+			imgs[i].init(784);
+			labels[i].init(10);
 		}
 	}
 
 
 	
-	~mnist(){
-		free(imgs);
-		free(labels);
-	}
 };
 
 
@@ -55,10 +51,10 @@ int readmnistdata(mnist *training_data, mnist *test_data, mnist *validation_data
 		unsigned char label;
         if(read(fd,&label,1)==-1)return -1;
         for(int j = 0; j < 10; j++){
-            test_data->labels[i][j][0]=0;
+            test_data->labels[i][j]=0;
         }
 
-        test_data->labels[i][label][0]=1;
+        test_data->labels[i][label]=1;
     }
 
 
@@ -84,9 +80,9 @@ int readmnistdata(mnist *training_data, mnist *test_data, mnist *validation_data
 		unsigned char label;
 		if(read(fd,&label,1)==-1)return -1;
 		for(int j = 0; j < 10; j++){
-			training_data->labels[i][j][0]=0;
+			training_data->labels[i][j]=0;
 		}
-		training_data->labels[i][label][0]=1;
+		training_data->labels[i][label]=1;
 	}
 
 	if((fd = open("mnisttrainimgs",O_RDONLY)) == -1)return -1;

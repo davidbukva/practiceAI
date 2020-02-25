@@ -4,22 +4,63 @@
 #include <cstdlib>
 #include <iostream>
 
+template <typename T>
+struct vector{
+    
+    int n;
+    
+    T *data;
 
+    vector(int _n):n(_n){
+        data = (T *)malloc(n*sizeof(T));
+    }
+
+    vector(){}
+
+    //vector(){}
+
+    void init(int _n){
+        n=_n;
+        data = (T *)malloc(n*sizeof(T));
+    }
+
+    void init(int _n, T t){
+        n=_n;
+        data = (T *)malloc(n*sizeof(T));
+        for(int i = 0; i < n; i++){
+            data[i]=t;
+        }
+    }
+
+    T& operator[](int pos){
+        return data[pos];
+    }
+
+    int size(){
+        return n;
+    }
+    
+
+
+
+};
+
+template <typename T>
 struct matrix{
 
     int n;
     int m;
 
-    unsigned char *data;
+    vector<vector<T>> data;
 
     matrix(int _n, int _m): n(_n),m(_m){
-        data = (unsigned char *)malloc(m*n);
+        data.init(n, vector<T>(m));
     }
 
 	void init(int _n, int _m){
 		n=_n;
 		m=_m;
-        data = (unsigned char *)malloc(m*n);
+        data = (T *)malloc(m*n);
 	}
 
 	matrix(){
@@ -40,12 +81,12 @@ struct matrix{
 	/*}*/
 	/*}*/
 
-	unsigned char *get(int pos){
+	T& get(int pos){
 		return operator[](pos);
 	}
     
-	unsigned char *operator[](int pos){
-		return (data+pos*n);
+	T& operator[](int pos){
+		return data[pos];
 	}
 
 	void print(){
@@ -64,5 +105,6 @@ struct matrix{
 
 
 };
+
 
 #endif /* MATRIX_H */
