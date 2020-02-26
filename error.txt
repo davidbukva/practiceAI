@@ -1,23 +1,41 @@
-In file included from main.cpp:5:
-matrix.h: In member function ‘vector<T>& vector<T>::init(std::initializer_list<int>)’:
-matrix.h:43:22: error: no match for ‘operator[]’ (operand types are ‘std::initializer_list<int>’ and ‘int’)
-   43 |    data[i].init(sizes[i]);
-      |                      ^
 In file included from main.cpp:7:
-net.h: In constructor ‘net::net(int, std::initializer_list<int>)’:
-net.h:21:26: error: call of overloaded ‘init(int&, std::initializer_list<int>&)’ is ambiguous
-   21 |   b.init(nlayers, _layers);
-      |                          ^
+net.h: In member function ‘double net::cost(vector<vector<double> >&, vector<vector<double> >&)’:
+net.h:53:29: error: no match for ‘operator-’ (operand types are ‘vector<double>’ and ‘vector<double>’)
+   53 |    sum += squarev(desired[i]-output(inputs[i]));
 In file included from main.cpp:5:
-matrix.h:48:13: note: candidate: ‘vector<T>& vector<T>::init(int, vector<int>) [with T = vector<double>]’
-   48 |  vector<T>& init(int _n, vector<int> sizes){
-      |             ^~~~
-matrix.h:53:13: note: candidate: ‘vector<T>& vector<T>::init(int, T) [with T = vector<double>]’
-   53 |  vector<T>& init(int _n, T copy){
-      |             ^~~~
-matrix.h: In instantiation of ‘vector<T>& vector<T>::init(std::initializer_list<int>) [with T = int]’:
-matrix.h:19:3:   required from ‘vector<T>::vector(std::initializer_list<int>) [with T = int]’
-net.h:19:27:   required from here
-matrix.h:43:12: error: request for member ‘init’ in ‘*(((vector<int>*)this)->vector<int>::data + ((sizetype)(((long unsigned int)i) * 4)))’, which is of non-class type ‘int’
-   43 |    data[i].init(sizes[i]);
-      |    ~~~~~~~~^~~~
+matrix.h:68:15: note: candidate: ‘vector<T> vector<T>::operator-(vector<T>&) [with T = double]’ <near match>
+   68 |     vector<T> operator-(vector<T> &other){
+      |               ^~~~~~~~
+matrix.h:68:15: note:   conversion of argument 1 would be ill-formed:
+In file included from main.cpp:7:
+net.h:53:36: error: cannot bind non-const lvalue reference of type ‘vector<double>&’ to an rvalue of type ‘vector<double>’
+   53 |    sum += squarev(desired[i]-output(inputs[i]));
+      |                              ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/9.2.1/bits/stl_algobase.h:67,
+                 from /usr/include/c++/9.2.1/bits/char_traits.h:39,
+                 from /usr/include/c++/9.2.1/ios:40,
+                 from /usr/include/c++/9.2.1/ostream:38,
+                 from /usr/include/c++/9.2.1/iostream:39,
+                 from main.cpp:2:
+/usr/include/c++/9.2.1/bits/stl_iterator.h:415:5: note: candidate: ‘template<class _IteratorL, class _IteratorR> decltype ((__y.base() - __x.base())) std::operator-(const std::reverse_iterator<_Iterator>&, const std::reverse_iterator<_IteratorR>&)’
+  415 |     operator-(const reverse_iterator<_IteratorL>& __x,
+      |     ^~~~~~~~
+/usr/include/c++/9.2.1/bits/stl_iterator.h:415:5: note:   template argument deduction/substitution failed:
+In file included from main.cpp:7:
+net.h:53:46: note:   ‘vector<double>’ is not derived from ‘const std::reverse_iterator<_Iterator>’
+   53 |    sum += squarev(desired[i]-output(inputs[i]));
+      |                                              ^
+In file included from /usr/include/c++/9.2.1/bits/stl_algobase.h:67,
+                 from /usr/include/c++/9.2.1/bits/char_traits.h:39,
+                 from /usr/include/c++/9.2.1/ios:40,
+                 from /usr/include/c++/9.2.1/ostream:38,
+                 from /usr/include/c++/9.2.1/iostream:39,
+                 from main.cpp:2:
+/usr/include/c++/9.2.1/bits/stl_iterator.h:1212:5: note: candidate: ‘template<class _IteratorL, class _IteratorR> decltype ((__x.base() - __y.base())) std::operator-(const std::move_iterator<_IteratorL>&, const std::move_iterator<_IteratorR>&)’
+ 1212 |     operator-(const move_iterator<_IteratorL>& __x,
+      |     ^~~~~~~~
+/usr/include/c++/9.2.1/bits/stl_iterator.h:1212:5: note:   template argument deduction/substitution failed:
+In file included from main.cpp:7:
+net.h:53:46: note:   ‘vector<double>’ is not derived from ‘const std::move_iterator<_IteratorL>’
+   53 |    sum += squarev(desired[i]-output(inputs[i]));
+      |                                              ^

@@ -21,6 +21,6 @@ int main(){
 	}
 	
 	net nn({784,30,10});
-
+	//nn.output(training_data.imgs[0]);
 
 }

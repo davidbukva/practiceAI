@@ -19,17 +19,15 @@ struct vector{
 		init(sizes);
 	}
 
-	vector(int _n, vector<int> sizes){
+	vector(int _n, vector<int> &sizes){
 		init(_n,sizes);
 	}
 
-	vector(const vector<T>& other){
-		(*this)=other;
-	}
+	/*vector(vector<T> other){*/
+	/*(*this)=other;*/
+	/*}*/
 
     vector(){}
-
-    //vector(){}
 
     vector<T>& init(int _n){
         n=_n;
@@ -37,7 +35,7 @@ struct vector{
 		return *this;
     }
 
-    vector<T>& init(std::initializer_list<int> sizes){
+	vector<T>& init(std::initializer_list<int> sizes){
 		init(sizes.size());
 		for(int i = 0; i < n; i++){
 			data[i].init(sizes.begin()[i]);
@@ -46,13 +44,11 @@ struct vector{
 	}
 
 	vector<T>& init(vector<int> sizes){
-        std::cerr << "stepped into init()\n";
-        init(sizes.size());
-        std::cerr << "done init(sizes.size());\n";
-        for(int i = 0; i < n; i++){
-            data[i].init(sizes[i]);
-            std::cerr << "done " << i << "th data[i].init(sizes[i]);\n";
-        }
+		init(sizes.size());
+
+		for(int i = 0; i < n; i++){
+			data[i].init(sizes[i]);
+		}
 		return *this;
 	}
 
@@ -60,6 +56,14 @@ struct vector{
 		init(_n);
 		for(int i = 0; i < n; i++){
 			data[i]=copy;
+		}
+		return *this;
+	}
+
+	vector<T>& init(int _n, unsigned char* _data){
+		init(_n);
+		for(int i = 0; i < n; i++){
+			data[i]=(T)_data[i];
 		}
 		return *this;
 	}
@@ -72,8 +76,10 @@ struct vector{
         }
         return ret;
     }
+	
 
 	vector<T> operator+(vector<T> other){
+		/*cout << "stepped into +" << endl;*/
 		vector<T> ret(other.size());
 		for(int i = 0; i < n; i++){
 			ret[i] = data[i] + other[i];
@@ -99,10 +105,10 @@ struct vector{
 	}
 
     vector<T>& operator=(vector<T> other){
-        init(other.size());
-        for(int i = 0; i < n; i++){
-            data[i]=other[i];
-        }
+		init(other.size());
+		for(int i = 0; i < n; i++){
+			data[i]=other[i];
+		}
         return *this;
     }
 

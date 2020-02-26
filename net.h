@@ -18,12 +18,10 @@ struct net{
 		nlayers = _layers.size();
 		layers = _layers;
 		w.init(nlayers);
-		b.init(_layers);
+		b.init(layers);
 		for(int i = 1; i < nlayers; i++){
-            std::cerr << "called w[" << i << "].init(layers[" << i << "],layers["<<i-1<<"]);\n";
 			w[i].init(layers[i],layers[i-1]);
 		}
-        std::cerr << "done all w.init()s\n";
 	}
 
 
@@ -69,7 +67,6 @@ struct net{
 		return a;
 
 	}
-
 
 	
 

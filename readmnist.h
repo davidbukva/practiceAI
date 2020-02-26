@@ -14,8 +14,8 @@ struct mnist{
 
 	int numData;
 
-	vector<vector<unsigned char>> imgs;
-	vector<vector<unsigned char>> labels;
+	vector<vector<double>> imgs;
+	vector<vector<double>> labels;
 
 	void init(int _numData){
 		
@@ -62,10 +62,12 @@ int readmnistdata(mnist *training_data, mnist *test_data, mnist *validation_data
 	for(int i = 0; i < 4; i++)
 		read(fd,cnumImgs,4);
 
+	unsigned char *buf = (unsigned char*)malloc(numImgs*784);
     for(int i = 0; i < numImgs; i++){
-		read(fd,test_data->imgs[i].data,784);
+		read(fd,buf,784);
+		test_data->imgs.init(numImgs,buf);
 	}
-
+	free(buf);
 
 
 	if((fd = open("mnisttrainlabels",O_RDONLY)) == -1)return -1;
@@ -88,10 +90,13 @@ int readmnistdata(mnist *training_data, mnist *test_data, mnist *validation_data
 	if((fd = open("mnisttrainimgs",O_RDONLY)) == -1)return -1;
 	for(int i = 0; i < 4; i++)
 		read(fd,cnumImgs,4);
+	buf = (unsigned char*)malloc(numImgs*784);
 
+	read(fd,buf,784*numImgs);
     for(int i = 0; i < numImgs; i++){
-		read(fd,training_data->imgs[i].data,784);
+		training_data->imgs.init(numImgs,buf);
 	}
+	free(buf);
 	
 	
 
