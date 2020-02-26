@@ -16,12 +16,14 @@ struct net{
 	net(std::initializer_list<int> _layers){
 		srand(time(nullptr));
 		nlayers = _layers.size();
-		layers.init(_nlayers) = _layers;
+		layers = _layers;
 		w.init(nlayers);
-		b.init(nlayers, _layers);
+		b.init(_layers);
 		for(int i = 1; i < nlayers; i++){
+            std::cerr << "called w[" << i << "].init(layers[" << i << "],layers["<<i-1<<"]);\n";
 			w[i].init(layers[i],layers[i-1]);
 		}
+        std::cerr << "done all w.init()s\n";
 	}
 
 

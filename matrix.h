@@ -40,13 +40,19 @@ struct vector{
     vector<T>& init(std::initializer_list<int> sizes){
 		init(sizes.size());
 		for(int i = 0; i < n; i++){
-			data[i].init(sizes[i]);
+			data[i].init(sizes.begin()[i]);
 		}
 		return *this;
 	}
 
-	vector<T>& init(int _n, vector<int> sizes){
-		init(_n,sizes.data);
+	vector<T>& init(vector<int> sizes){
+        std::cerr << "stepped into init()\n";
+        init(sizes.size());
+        std::cerr << "done init(sizes.size());\n";
+        for(int i = 0; i < n; i++){
+            data[i].init(sizes[i]);
+            std::cerr << "done " << i << "th data[i].init(sizes[i]);\n";
+        }
 		return *this;
 	}
 
@@ -93,9 +99,17 @@ struct vector{
 	}
 
     vector<T>& operator=(vector<T> other){
-        init(n);
+        init(other.size());
         for(int i = 0; i < n; i++){
             data[i]=other[i];
+        }
+        return *this;
+    }
+
+    vector<T>& operator=(std::initializer_list<T> other){
+        init(other.size());
+        for(int i = 0; i < n; i++){
+            data[i]=other.begin()[i];
         }
         return *this;
     }
