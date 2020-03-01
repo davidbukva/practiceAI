@@ -64,6 +64,7 @@ struct net{
 			a=sigmoid(w[l]*a+b[l]);
 		}
 
+
 		return a;
 
 	}

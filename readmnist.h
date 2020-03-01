@@ -31,6 +31,7 @@ struct mnist{
 	}
 
 
+
 	
 };
 
@@ -38,7 +39,7 @@ struct mnist{
 int readmnistdata(mnist *training_data, mnist *test_data, mnist *validation_data){
 	int fd;
     unsigned char cnumImgs[4];
-    unsigned int numImgs;
+    int numImgs;
 
 	if((fd = open("mnisttestlabels",O_RDONLY)) == -1)return -1;
     
@@ -62,10 +63,11 @@ int readmnistdata(mnist *training_data, mnist *test_data, mnist *validation_data
 	for(int i = 0; i < 4; i++)
 		read(fd,cnumImgs,4);
 
-	unsigned char *buf = (unsigned char*)malloc(numImgs*784);
-    for(int i = 0; i < numImgs; i++){
-		read(fd,buf,784);
-		test_data->imgs.init(numImgs,buf);
+	unsigned char *buf = (unsigned char*)malloc(784*numImgs);
+	read(fd,buf,784*numImgs);
+	for(int i = 0; i < numImgs; i++){
+		test_data->imgs[i].init(784,buf+784*i);
+		test_data->imgs[i] = test_data->imgs[i]/255;
 	}
 	free(buf);
 
@@ -90,11 +92,13 @@ int readmnistdata(mnist *training_data, mnist *test_data, mnist *validation_data
 	if((fd = open("mnisttrainimgs",O_RDONLY)) == -1)return -1;
 	for(int i = 0; i < 4; i++)
 		read(fd,cnumImgs,4);
-	buf = (unsigned char*)malloc(numImgs*784);
+
+	buf = (unsigned char*)malloc(784*numImgs);
 
 	read(fd,buf,784*numImgs);
-    for(int i = 0; i < numImgs; i++){
-		training_data->imgs.init(numImgs,buf);
+	for(int i = 0; i < numImgs; i++){
+		training_data->imgs[i].init(784,buf+i*784);
+		training_data->imgs[i] = training_data->imgs[i]/255;
 	}
 	free(buf);
 	

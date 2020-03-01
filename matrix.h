@@ -104,6 +104,14 @@ struct vector{
 		
 	}
 
+	vector<T> operator/(T rhs){
+		vector<T> ret(n);
+		for(int i = 0; i < n; i++){
+			ret[i]=data[i]/rhs;
+		}
+		return ret;
+	}
+
     vector<T>& operator=(vector<T> other){
 		init(other.size());
 		for(int i = 0; i < n; i++){
@@ -135,6 +143,7 @@ struct vector{
     int size(){
         return n;
     }
+
     
 
 
@@ -189,7 +198,7 @@ struct matrix{
 	}
 
 	vector<T> operator*(vector<T> rhs){
-		vector<T> ret(rhs.size());
+		vector<T> ret(n);
 		for(int k = 0; k < n; k++){
 			ret[k] = data[k]*rhs;
 		}
