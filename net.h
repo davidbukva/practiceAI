@@ -18,9 +18,10 @@ struct net{
 		nlayers = _layers.size();
 		layers = _layers;
 		w.init(nlayers);
-		b.init(layers);
+        b.init(nlayers);
 		for(int i = 1; i < nlayers; i++){
 			w[i].init(layers[i],layers[i-1]);
+		    b[i].init(layers[i]);
 		}
 	}
 
@@ -45,7 +46,7 @@ struct net{
 	}
 
 
-	double cost(vector<vector<double>> &inputs, vector<vector<double>> &desired){
+	double cost(const vector<vector<double>> &inputs, const vector<vector<double>> &desired) const{
 		double sum = 0;
 		for(int i = 0; i < inputs.size(); i++){
 			sum += squarev(desired[i]-output(inputs[i]));
@@ -56,7 +57,7 @@ struct net{
 
 	
 
-	vector<double> output(vector<double> input){
+	vector<double> output(const vector<double>& input) const{
 		
 		vector<double> a(layers[0]);
 		a=input;
@@ -69,28 +70,38 @@ struct net{
 
 	}
 
+    void randomize_weights(){
+        std::srand(std::time(0));
+        for(int i = 1; i < nlayers; i++){
+            for(int j = 0; j < w[i].n; j++){
+                for(int k = 0; k < w[i][j].size();k++)
+                    w[i][j][k]=0.1*(std::rand()%10);
+            }
+        }
+    }
+
 	
 
-	double sigmoid(double in){
+	constexpr double sigmoid(double in) const{
 		return 1.0/(1.0+exp(-in));
 	}
 
-	vector<double> sigmoid(vector<double> in){
-		vector<double> ret;
+	vector<double> sigmoid(const vector<double>& in) const{
+		vector<double> ret(in.size());
 		for(int i = 0; i < in.size(); i++){
 			ret[i]=sigmoid(in[i]);
 		}
 		return ret;
 	}
 
-	vector<double> subv(vector<double> one, vector<double> two){
+	vector<double> subv(const vector<double>& one, const vector<double>& two) const{
 		vector<double> ans(one.size());
 		for(int i = 0; i < one.size(); i++){
 			ans[i]=one[i]-two[i];
 		}
 		return ans;
 	}
-	double squarev(vector<double> vec){
+	double squarev(const vector<double>& vec) const{
 		double ans = 0;
 		for(int i = 0; i < vec.size(); i++){
 			ans += vec[i]*vec[i];
