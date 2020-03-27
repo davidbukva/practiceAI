@@ -14,7 +14,6 @@ struct net{
 	vector<int> layers;
 
 	net(std::initializer_list<int> _layers){
-		srand(time(nullptr));
 		nlayers = _layers.size();
 		layers = _layers;
 		w.init(nlayers);
@@ -59,10 +58,11 @@ struct net{
 
 	vector<double> output(const vector<double>& input) const{
 		
-		vector<double> a(layers[0]);
-		a=input;
+		vector<double> a = input;
 		for(int l = 1; l < nlayers; l++){
-			a=sigmoid(w[l]*a+b[l]);
+			a=w[l]*a+b[l];
+
+
 		}
 
 
@@ -75,7 +75,9 @@ struct net{
         for(int i = 1; i < nlayers; i++){
             for(int j = 0; j < w[i].n; j++){
                 for(int k = 0; k < w[i][j].size();k++)
+				{
                     w[i][j][k]=0.1*(std::rand()%10);
+				}	
             }
         }
     }

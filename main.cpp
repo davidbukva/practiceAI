@@ -27,8 +27,9 @@ int main(){
     cout << "read data\n";
     cout.flush();
 	
+
 	net nn({784,30,10});
     nn.randomize_weights();
-    cout << nn.output(training_data.imgs[0])[0] << endl;
+    cout << nn.output(training_data.imgs[12])[0] << endl;
 
 }

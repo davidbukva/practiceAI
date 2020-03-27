@@ -67,7 +67,7 @@ int readmnistdata(mnist *training_data, mnist *test_data, mnist *validation_data
 	read(fd,buf,784*numImgs);
 	for(int i = 0; i < numImgs; i++){
 		test_data->imgs[i].init(784,buf+784*i);
-		test_data->imgs[i] = test_data->imgs[i]/255;
+		test_data->imgs[i] /= 256;
 	}
     delete buf;
 
@@ -89,6 +89,7 @@ int readmnistdata(mnist *training_data, mnist *test_data, mnist *validation_data
 		training_data->labels[i][label]=1;
 	}
 
+
 	if((fd = open("mnisttrainimgs",O_RDONLY)) == -1)return -1;
 	for(int i = 0; i < 4; i++)
 		read(fd,cnumImgs,4);
@@ -99,10 +100,10 @@ int readmnistdata(mnist *training_data, mnist *test_data, mnist *validation_data
 	for(int i = 0; i < numImgs; i++){
         
 		training_data->imgs[i].init(784,buf+i*784);
-		training_data->imgs[i] = training_data->imgs[i]/255;
-	    //if(i==0)cout << imgs[
+		training_data->imgs[i] /= 256;
     }
     delete buf;
+	
 	
 	
 

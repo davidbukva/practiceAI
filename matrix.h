@@ -69,7 +69,7 @@ struct vector{
 	}
 
 
-    vector<T> operator-(vector<T> other) const{
+    vector<T> operator-(const vector<T>& other) const{
         vector<T> ret(other.size());
         for(int i = 0; i < n; i++){
             ret[i]=data[i]-other[i];
@@ -78,7 +78,7 @@ struct vector{
     }
 	
 
-	vector<T> operator+(vector<T> other) const{
+	vector<T> operator+(const vector<T>& other) const{
 		vector<T> ret(other.size());
 		for(int i = 0; i < n; i++){
 			ret[i] = data[i] + other[i];
@@ -86,7 +86,7 @@ struct vector{
 		return ret;
 	}
 
-	T operator*(vector<T> rhs) const{
+	T operator*(const vector<T>& rhs) const{
 		T ret;
 		for(int i = 0; i < n; i++){
 			ret+=data[i]*rhs[i];
@@ -94,7 +94,7 @@ struct vector{
 		return ret;
 	}
 
-	vector<T> operator*(T other) const{
+	vector<T> operator*(const T& other) const{
 		vector<T> ret(n);
 		for(int i = 0; i < n; i++){
 			ret[i]=data[i]*other;
@@ -103,7 +103,7 @@ struct vector{
 		
 	}
 
-	vector<T> operator/(T rhs) const{
+	vector<T>& operator/(const T& rhs) const{
 		vector<T> ret(n);
 		for(int i = 0; i < n; i++){
 			ret[i]=data[i]/rhs;
@@ -111,7 +111,15 @@ struct vector{
 		return ret;
 	}
 
-    vector<T>& operator=(vector<T> other){
+	vector<T>& operator/=(const T& rhs){
+		for(int i = 0; i < n; i++){
+			data[i] /= rhs;
+		}
+		return *this;
+	}
+
+
+    vector<T>& operator=(const vector<T>& other){
 		init(other.size());
 		for(int i = 0; i < n; i++){
 			data[i]=other[i];
@@ -133,6 +141,7 @@ struct vector{
 		}
 		return *this;
 	}
+
 
     T& operator[](int pos) const{
         return data.get()[pos];
