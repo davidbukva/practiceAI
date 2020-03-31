@@ -6,6 +6,7 @@ using namespace std;
 #include <cstdlib>
 
 #include "matrix.h"
+#include "mnist.h"
 #include "readmnist.h"
 #include "net.h"
 
@@ -30,6 +31,5 @@ int main(){
 
 	net nn({784,30,10});
     nn.randomize_weights();
-    cout << nn.output(training_data.imgs[12])[0] << endl;
-
+	nn.train(10,1.0,training_data,1000);
 }

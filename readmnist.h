@@ -7,34 +7,8 @@
 #include <unistd.h>
 #include <iostream>
 #include <stdlib.h>
+#include "mnist.h"
 #include "matrix.h"
-
-
-struct mnist{
-
-	int numData;
-
-	vector<vector<double>> imgs;
-	vector<vector<double>> labels;
-
-	void init(int _numData){
-		
-		numData = _numData;
-
-        imgs.init(_numData);
-        labels.init(_numData);
-
-		for(int i = 0; i < _numData; i++){
-			imgs[i].init(784);
-			labels[i].init(10);
-		}
-	}
-
-
-
-	
-};
-
 
 int readmnistdata(mnist *training_data, mnist *test_data, mnist *validation_data){
 	int fd;

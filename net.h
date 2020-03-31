@@ -1,9 +1,12 @@
 #ifndef NET_H
-#define NET_J
+#define NET_H
+
 #include "matrix.h"
+#include "mnist.h"
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
+#include <algorithm>
 
 struct net{
 
@@ -24,33 +27,65 @@ struct net{
 		}
 	}
 
-
-	void calculategrad(const vector<vector<double>>& in, const vector<vector<double>> &des, vector<vector<vector<double>>> *nablaCW, vector<vector<double>> *nablaCB){
-		for(int i = 1; i < nlayers; i++){
-			(*nablaCB)[i].init(layers[i]);
-			for(int j = 0; j < layers[i]; j++){
-				(*nablaCW)[i][j].init(layers[i-1]);
-			}
-		}
+	pair<vector<matrix<double>>,vector<vector<double>>> backprop(vector<double> input, vector<double> label){
+		return {vector<matrix<double>>(),vector<vector<double>>()};
 	}
 
-
-	void train(int epochs, double eta,const vector<vector<double>> &inputs, const vector<vector<double>> &desired, int minibsize){
+	void train(const int epochs, const double eta,const mnist& datain, const int minibsize){
 		for(int epoch = 0; epoch < epochs; epoch++){
 
 			//TODO: random shuffle
-			
-			
+			vector<int> index(datain.size());
+			for(int i = 0;i < index.size(); i++)index[i]=i;
+			std::random_shuffle(index.data.get(),index.data.get()+index.size());
+			mnist data(datain.size());
+			for(int i = 0; i < data.size(); i++){
+				data.imgs[i]=datain.imgs[index[i]];
+				data.labels[i]=datain.labels[index[i]];
+			}
+
+
+			for(int batchnum = 0; batchnum+minibsize-1 < data.size(); batchnum+=minibsize){
+				/*mnist minibatch(minibsize);*/
+				/*for(int i = 0; i < minibsize; i++){*/
+				/*minibatch.imgs[i]=data.imgs[batchnum+i];*/
+				/*minibatch.labels[i]=data.labels[i];*/
+				/*}*/
+				vector<matrix<double>> nablaCW(w);
+				vector<vector<double>> nablaCB(b);
+				nablaCW = int(0);
+				nablaCB = int(0);
+
+				for(int i = 0; i < minibsize; i++){
+					auto nabla = backprop(data.imgs[i+batchnum], data.labels[i+batchnum]);
+					nablaCW+=nabla.first;
+					nablaCB+=nabla.second;
+				}
+				for(int i = 0; i < w.size(); i++){
+					for(int j = 0; j < w[i].size(); j++){
+						for(int k = 0; k < w[i][j].size(); k++){
+							w[i][j][k]=w[i][j][k]-(eta*nablaCW[i][j][k]/minibsize);
+						}
+					}
+				}
+				for(int i = 0; i < b.size(); i++){
+					for(int j = 0; j < b[i].size(); j++){
+						b[i][j]=b[i][j]-(eta*nablaCB[i][j]/minibsize);
+					}
+				}
+
+			}
+
 		}
 	}
 
 
-	double cost(const vector<vector<double>> &inputs, const vector<vector<double>> &desired) const{
+	double cost(const mnist& data) const{
 		double sum = 0;
-		for(int i = 0; i < inputs.size(); i++){
-			sum += squarev(desired[i]-output(inputs[i]));
+		for(int i = 0; i < data.imgs.size(); i++){
+			sum += squarev(data.labels[i]-output(data.imgs[i]));
 		}
-		return sum/(2*inputs.size());
+		return sum/(2*data.imgs.size());
 	}
 		
 
@@ -67,6 +102,14 @@ struct net{
 
 		return a;
 
+	}
+
+	int evaluate(const mnist& data) const{
+		int good = 0;
+		for(int i = 0; i < data.imgs.size(); i++){
+			if(data.labels[i][output(data.imgs[i]).max()]==1)good++;
+		}
+		return good;
 	}
 
     void randomize_weights(){
