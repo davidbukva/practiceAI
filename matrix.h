@@ -87,7 +87,7 @@ struct vector{
 	}
 
 	T operator*(const vector<T>& rhs) const{
-		T ret;
+		T ret(0);
 		for(int i = 0; i < n; i++){
 			ret+=data[i]*rhs[i];
 		}
@@ -100,7 +100,6 @@ struct vector{
 			ret[i]=data[i]*other;
 		}
 		return ret;
-		
 	}
 
 	vector<T>& operator/(const T& rhs) const{

@@ -60,8 +60,7 @@ struct net{
 		
 		vector<double> a = input;
 		for(int l = 1; l < nlayers; l++){
-			a=w[l]*a+b[l];
-
+			a=sigmoid(w[l]*a+b[l]);
 
 		}
 
@@ -76,7 +75,7 @@ struct net{
             for(int j = 0; j < w[i].n; j++){
                 for(int k = 0; k < w[i][j].size();k++)
 				{
-                    w[i][j][k]=0.1*(std::rand()%10);
+					w[i][j][k]=0.1*(std::rand()%10);
 				}	
             }
         }
