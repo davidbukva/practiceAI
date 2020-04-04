@@ -148,6 +148,14 @@ struct vector{
 		return *this;
 	}
 
+	vector<T>& hadamard(const vector<T>& other){
+		vector<T> ret(n);
+		for(int i = 0; i < n; i++){
+			ret[i]=data[i]*other[i];
+		}
+		return ret;
+	}
+
 	int max(){
 		int mx = 0;
 		for(int i = 1; i < size(); i++){

@@ -28,13 +28,24 @@ struct net{
 	}
 
 	pair<vector<matrix<double>>,vector<vector<double>>> backprop(vector<double> input, vector<double> label){
-		return {vector<matrix<double>>(),vector<vector<double>>()};
+	
+		vector<double> a = input;
+		vector<vector<double>> activations(nlayers);
+		activations[0]=a;
+		vector<vector<double>> zs(nlayers);
+		for(int i = 1; i < nlayers; i++){
+			vector<double> z = (w*a)+b;
+			zs[i]=z;
+			a=sigmoid(z);
+			activations[i]=a;
+		}
+		auto delta = cost_derivative(
+
 	}
 
 	void train(const int epochs, const double eta,const mnist& datain, const int minibsize){
 		for(int epoch = 0; epoch < epochs; epoch++){
 
-			//TODO: random shuffle
 			vector<int> index(datain.size());
 			for(int i = 0;i < index.size(); i++)index[i]=i;
 			std::random_shuffle(index.data.get(),index.data.get()+index.size());
@@ -87,6 +98,10 @@ struct net{
 		}
 		return sum/(2*data.imgs.size());
 	}
+
+	double cost_derivative(const vector<double>& output, const vector<double>& labels) const{
+		return output-labels;
+	}
 		
 
 	
@@ -118,7 +133,7 @@ struct net{
             for(int j = 0; j < w[i].n; j++){
                 for(int k = 0; k < w[i][j].size();k++)
 				{
-					w[i][j][k]=0.1*(std::rand()%10);
+					w[i][j][k]=0.1*(std::rand()%10)-0.5;
 				}	
             }
         }
@@ -130,12 +145,21 @@ struct net{
 		return 1.0/(1.0+exp(-in));
 	}
 
+	constexpr double sigmoid_prime(double in) const{
+		return sigmoid(in)*(1-sigmoid(in));
+	}
+
+
 	vector<double> sigmoid(const vector<double>& in) const{
 		vector<double> ret(in.size());
 		for(int i = 0; i < in.size(); i++){
 			ret[i]=sigmoid(in[i]);
 		}
 		return ret;
+	}
+
+	constexpr double sigmoid_prime(const vector<double>& in) const{
+		return sigmoid(in)*(1-sigmoid(in));
 	}
 
 	vector<double> subv(const vector<double>& one, const vector<double>& two) const{
