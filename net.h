@@ -4,6 +4,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
+#include <algorithm>
 
 struct net{
 
@@ -37,10 +38,12 @@ struct net{
 
 
 	void train(int epochs, double eta,const vector<vector<double>> &inputs, const vector<vector<double>> &desired, int minibsize){
+        auto in = inputs;
 		for(int epoch = 0; epoch < epochs; epoch++){
 
 			//TODO: random shuffle
-			
+            
+
 			
 		}
 	}
@@ -49,6 +52,8 @@ struct net{
 	double cost(const vector<vector<double>> &inputs, const vector<vector<double>> &desired) const{
 		double sum = 0;
 		for(int i = 0; i < inputs.size(); i++){
+            if(i%1000==0)
+            cout << "i: " << i << endl;
 			sum += squarev(desired[i]-output(inputs[i]));
 		}
 		return sum/(2*inputs.size());

@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <memory>
+#include <iterator>
 
 template <typename T>
 struct vector{
@@ -142,7 +143,7 @@ struct vector{
     constexpr int size() const{
         return n;
     }
-
+    
     
 
 

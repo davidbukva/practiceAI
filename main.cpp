@@ -29,6 +29,8 @@ int main(){
 	
 	net nn({784,30,10});
     nn.randomize_weights();
-    cout << nn.output(training_data.imgs[0])[0] << endl;
-
+    //cout << training_data.imgs.size();
+    //cout << endl << training_data.imgs[0].size()  << endl;
+    //cout << nn.cost(training_data.imgs,training_data.labels) << endl;
+    
 }
