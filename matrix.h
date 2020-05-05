@@ -13,7 +13,7 @@ struct vector{
     
     unique_ptr<T[]> data;
 
-    vector(int _n){
+    vector(const int _n){
         init(_n);
     }
 
@@ -26,13 +26,13 @@ struct vector{
         init(other);
     }
 
-	vector(int _n, const vector<int> &sizes){
+	vector(const int _n, const vector<int> &sizes){
 		init(_n,sizes);
 	}
 
     vector(){}
 
-    vector<T>& init(int _n){
+    vector<T>& init(const int _n){
         n=_n;
         data = make_unique<T[]>(std::size_t(n));
 		return *this;
@@ -53,7 +53,7 @@ struct vector{
 		return *this;
 	}
 
-	vector<T>& init(int _n, const T& copy){
+	vector<T>& init(const int _n, const T& copy){
 		init(_n);
 		for(int i = 0; i < n; i++){
 			data[i]=copy;
@@ -61,7 +61,7 @@ struct vector{
 		return *this;
 	}
 
-	vector<T>& init(int _n, unsigned char* _data){
+	vector<T>& init(const int _n, unsigned char* _data){
 		init(_n);
 		for(int i = 0; i < n; i++){
 			data[i]=(T)_data[i];
@@ -70,7 +70,7 @@ struct vector{
 	}
 
 
-    vector<T> operator-(vector<T> other) const{
+    vector<T> operator-(const vector<T>& other) const{
         vector<T> ret(other.size());
         for(int i = 0; i < n; i++){
             ret[i]=data[i]-other[i];
@@ -79,7 +79,7 @@ struct vector{
     }
 	
 
-	vector<T> operator+(vector<T> other) const{
+	vector<T> operator+(const vector<T>& other) const{
 		vector<T> ret(other.size());
 		for(int i = 0; i < n; i++){
 			ret[i] = data[i] + other[i];
@@ -87,24 +87,30 @@ struct vector{
 		return ret;
 	}
 
-	T operator*(vector<T> rhs) const{
-		T ret;
+	vector<T>& operator+=(const vector<T>& other) {
+		for(int i = 0; i < n; i++){
+			data[i]+= other[i];
+		}
+		return *this;
+	}
+
+	T operator*(const vector<T>& rhs) const{
+		T ret(0);
 		for(int i = 0; i < n; i++){
 			ret+=data[i]*rhs[i];
 		}
 		return ret;
 	}
 
-	vector<T> operator*(T other) const{
+	vector<T> operator*(const T& other) const{
 		vector<T> ret(n);
 		for(int i = 0; i < n; i++){
 			ret[i]=data[i]*other;
 		}
 		return ret;
-		
 	}
 
-	vector<T> operator/(T rhs) const{
+	vector<T>& operator/(const T& rhs) const{
 		vector<T> ret(n);
 		for(int i = 0; i < n; i++){
 			ret[i]=data[i]/rhs;
@@ -112,7 +118,15 @@ struct vector{
 		return ret;
 	}
 
-    vector<T>& operator=(vector<T> other){
+	vector<T>& operator/=(const T& rhs){
+		for(int i = 0; i < n; i++){
+			data[i] /= rhs;
+		}
+		return *this;
+	}
+
+
+    vector<T>& operator=(const vector<T>& other){
 		init(other.size());
 		for(int i = 0; i < n; i++){
 			data[i]=other[i];
@@ -134,6 +148,28 @@ struct vector{
 		}
 		return *this;
 	}
+
+	vector<T>& hadamard(const vector<T>& other){
+		vector<T> ret(n);
+		for(int i = 0; i < n; i++){
+			ret[i]=data[i]*other[i];
+		}
+		return ret;
+	}
+
+	int max(){
+		int mx = 0;
+		for(int i = 1; i < size(); i++){
+			if(data[i]>data[mx])mx=i;
+		}
+		return mx;
+	}
+
+	vector<T>& operator=(double a){
+		for(int i = 0; i < size(); i++)data[i]=a;
+		return *this;
+	}
+
 
     T& operator[](int pos) const{
         return data.get()[pos];
@@ -189,11 +225,8 @@ struct matrix{
 	/*}*/
 	/*}*/
 
-	T& get(int pos){
-		return operator[](pos);
-	}
     
-	vector<T>& operator[](int pos){
+	vector<T>& operator[](int pos) const{
 		return data[pos];
 	}
 
@@ -203,6 +236,22 @@ struct matrix{
 			ret[k] = data[k]*rhs;
 		}
 		return ret;
+	}
+
+	constexpr int size() const{
+		return n;
+	}
+
+	matrix<T>& operator=(const double a){
+		for(int i = 0; i < size(); i++)
+			data[i]=a;
+		return *this;
+	}
+
+	matrix<T>& operator+=(const matrix<T>& other){
+		for(int i = 0; i < size(); i++)
+			data[i]+=other[i];
+		return *this;
 	}
 
 	void print(){
