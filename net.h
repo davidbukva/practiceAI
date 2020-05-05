@@ -27,32 +27,55 @@ struct net{
 		}
 	}
 
-	pair<vector<matrix<double>>,vector<vector<double>>> backprop(vector<double> input, vector<double> label){
+	pair<vector<matrix<double>>,vector<vector<double>>> backprop(const vector<double>& input, const vector<double>& label){
 	
-		vector<double> a = input;
-		vector<vector<double>> activations(nlayers);
-		activations[0]=a;
-		vector<vector<double>> zs(nlayers);
-		for(int i = 1; i < nlayers; i++){
-			vector<double> z = (w*a)+b;
-			zs[i]=z;
-			a=sigmoid(z);
-			activations[i]=a;
-		}
-		auto delta = cost_derivative(
+        vector<double> a = input;
+        vector<vector<double>> activations(nlayers);
+        activations[0]=a;
+        vector<vector<double>> zs(nlayers);
+        for(int i = 1; i < nlayers; i++){
+            vector<double> z = (w[i]*a)+b[i];
+            zs[i]=z;
+            a=sigmoid(z);
+            activations[i]=a;
+        }
+        auto delta = cost_derivative(activations[nlayers-1],label).hadamard(sigmoid_prime(zs[nlayers-1]));
+        
+        vector<vector<double>> nabla_b(nlayers);
+        vector<matrix<double>> nabla_w(nlayers);       
+        
+        for(int i = 1; i < nlayers; i++){
+            nabla_w[i].init(layers[i],layers[i-1]);
+            nabla_b[i].init(layers[i]);
+        }
+
+        nabla_b[nlayers-1] = delta;
+        
+        for(int i = 0; i < layers[nlayers-1]; i++){
+            for(int j = 0; j < layers[nlayers-2]; j++){
+                nabla_w[nlayers-1][i][j] = activations[nlayers-2][j]*delta[i];
+            }
+        }
+
+        for(int l = nlayers-2; l >= 0; l--){
+            delta = (w[l+1].transpose()*delta).hadamard(sigmoid_prime(zs[l]));
+            
+                       
+            nabla_b[l] = delta;
+            
+            for(int i = 0; i < layers[l+1]; i++){
+                for(int j = 0; j < layers[l]; j++){
+                    nabla_w[l][i][j] = activations[l-1][j]*delta[i];
+                }
+            }
+
+        }
+
+        return {nabla_w,nabla_b};
+
 
 	}
 
-<<<<<<< HEAD
-	void train(int epochs, double eta,const vector<vector<double>> &inputs, const vector<vector<double>> &desired, int minibsize){
-        auto in = inputs;
-		for(int epoch = 0; epoch < epochs; epoch++){
-
-			//TODO: random shuffle
-            
-
-			
-=======
 	void train(const int epochs, const double eta,const mnist& datain, const int minibsize){
 		for(int epoch = 0; epoch < epochs; epoch++){
 
@@ -97,27 +120,19 @@ struct net{
 
 			}
 
->>>>>>> b46f10804e105d3ade7965cdbbd43b6714051068
 		}
 	}
 
 
 	double cost(const mnist& data) const{
 		double sum = 0;
-<<<<<<< HEAD
-		for(int i = 0; i < inputs.size(); i++){
-            if(i%1000==0)
-            cout << "i: " << i << endl;
-			sum += squarev(desired[i]-output(inputs[i]));
-=======
 		for(int i = 0; i < data.imgs.size(); i++){
 			sum += squarev(data.labels[i]-output(data.imgs[i]));
->>>>>>> b46f10804e105d3ade7965cdbbd43b6714051068
 		}
 		return sum/(2*data.imgs.size());
 	}
 
-	double cost_derivative(const vector<double>& output, const vector<double>& labels) const{
+	vector<double> cost_derivative(const vector<double>& output, const vector<double>& labels) const{
 		return output-labels;
 	}
 		
@@ -125,14 +140,10 @@ struct net{
 	
 
 	vector<double> output(const vector<double>& input) const{
-		
 		vector<double> a = input;
-		for(int l = 1; l < nlayers; l++){
+		for(int l = 1; l < nlayers; l++)
 			a=sigmoid(w[l]*a+b[l]);
-
-		}
-
-
+		
 		return a;
 
 	}
@@ -176,9 +187,17 @@ struct net{
 		return ret;
 	}
 
-	constexpr double sigmoid_prime(const vector<double>& in) const{
-		return sigmoid(in)*(1-sigmoid(in));
+	double sigmoid_prime(const vector<double>& in) const{
+		return sigmoid(in)*(sigmoid(in)-1)*-1;
 	}
+
+    vector<double> hadamard(const vector<double>& a, const vector<double>& b){
+        vector<double> ret(a.size());
+        for(int i = 0; i < a.size(); i++){
+            ret[i]=a[i]*b[i];
+        }
+        return ret;
+    }
 
 	vector<double> subv(const vector<double>& one, const vector<double>& two) const{
 		vector<double> ans(one.size());

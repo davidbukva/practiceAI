@@ -5,6 +5,10 @@
 #include <iostream>
 #include <memory>
 #include <iterator>
+#include <cassert>
+
+template <typename T>
+struct matrix;
 
 template <typename T>
 struct vector{
@@ -29,6 +33,21 @@ struct vector{
 	vector(const int _n, const vector<int> &sizes){
 		init(_n,sizes);
 	}
+
+    vector(const matrix<T>& other){
+        assert(other.n==1 || other.m==1);
+        if(other.n==1){
+            init(other.m);
+            for(int i = 0; i < n; i++){
+                data[i]=other[0][i];
+            }
+        }else{
+            init(other.n);
+            for(int i = 0; i < n; i++){
+                data[i]=other[i][0];
+            }
+        }
+    }
 
     vector(){}
 
@@ -71,6 +90,7 @@ struct vector{
 
 
     vector<T> operator-(const vector<T>& other) const{
+        assert(n==other.n);
         vector<T> ret(other.size());
         for(int i = 0; i < n; i++){
             ret[i]=data[i]-other[i];
@@ -80,6 +100,7 @@ struct vector{
 	
 
 	vector<T> operator+(const vector<T>& other) const{
+        assert(n==other.n);
 		vector<T> ret(other.size());
 		for(int i = 0; i < n; i++){
 			ret[i] = data[i] + other[i];
@@ -88,6 +109,7 @@ struct vector{
 	}
 
 	vector<T>& operator+=(const vector<T>& other) {
+        assert(n==other.n);
 		for(int i = 0; i < n; i++){
 			data[i]+= other[i];
 		}
@@ -95,6 +117,7 @@ struct vector{
 	}
 
 	T operator*(const vector<T>& rhs) const{
+        assert(n==rhs.n);
 		T ret(0);
 		for(int i = 0; i < n; i++){
 			ret+=data[i]*rhs[i];
@@ -149,7 +172,8 @@ struct vector{
 		return *this;
 	}
 
-	vector<T>& hadamard(const vector<T>& other){
+	vector<T> hadamard(const vector<T>& other){
+        assert(n==other.n);
 		vector<T> ret(n);
 		for(int i = 0; i < n; i++){
 			ret[i]=data[i]*other[i];
@@ -205,6 +229,13 @@ struct matrix{
 		return *this;
 	}
 
+    matrix(const vector<T>& vec){
+        init(vec.n, 1);
+        for(int i = 0; i < n; i++){
+            data[i]=vec[i];
+        }
+    }
+
 	
 
 	matrix(){
@@ -231,12 +262,26 @@ struct matrix{
 	}
 
 	vector<T> operator*(vector<T> rhs){
+        assert(m==rhs.n);
 		vector<T> ret(n);
 		for(int k = 0; k < n; k++){
 			ret[k] = data[k]*rhs;
 		}
 		return ret;
 	}
+
+    matrix<T> operator*(matrix<T> rhs){
+        assert(m==rhs.n);
+        matrix<T> ret(n,rhs.m);
+        matrix<T> rtrans = rhs.transpose();
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < rhs.m; j++){
+                ret[i][j]=data[i]*rtrans[j];
+            }
+        }
+        return ret;
+    }
+
 
 	constexpr int size() const{
 		return n;
@@ -249,10 +294,21 @@ struct matrix{
 	}
 
 	matrix<T>& operator+=(const matrix<T>& other){
-		for(int i = 0; i < size(); i++)
+        assert(n==other.n);
+        assert(m==other.m);
+		for(int i = 0; i < n; i++)
 			data[i]+=other[i];
 		return *this;
 	}
+
+    matrix<T> transpose() const{
+        matrix<T> ret(m, n);
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++)
+                ret[j][i] = data[i][j];
+        }
+        return ret;
+    }
 
 	void print(){
 		for(int i = 0; i < m; i++){

@@ -31,12 +31,9 @@ int main(){
 
 	net nn({784,30,10});
     nn.randomize_weights();
-<<<<<<< HEAD
     //cout << training_data.imgs.size();
     //cout << endl << training_data.imgs[0].size()  << endl;
     //cout << nn.cost(training_data.imgs,training_data.labels) << endl;
     
-=======
-	nn.train(10,1.0,training_data,1000);
->>>>>>> b46f10804e105d3ade7965cdbbd43b6714051068
+    nn.train(10,1.0,training_data,1000);
 }
