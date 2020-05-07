@@ -1,20 +1,14 @@
-using namespace std;
 #include <iostream>
-#include <string>
-#include <cstring>
-#include <memory>
-#include <cstdlib>
 
 #include "matrix.h"
 #include "mnist.h"
 #include "readmnist.h"
 #include "net.h"
 
-
+#include <iomanip>
+using namespace std;
 
 int main(){
-	
-    std::srand(std::time(nullptr));
 
 	//mnist *training_data = (mnist *)malloc(sizeof(mnist));
 	//mnist *test_data = (mnist *)malloc(sizeof(mnist));
@@ -35,5 +29,17 @@ int main(){
     //cout << endl << training_data.imgs[0].size()  << endl;
     //cout << nn.cost(training_data.imgs,training_data.labels) << endl;
     
-    nn.train(10,1.0,training_data,1000);
+    if(test_data.size() > 0){
+        int good = 0;
+        for(int i = 0; i < test_data.size(); i++){
+            if(test_data.labels[i][nn.output(test_data.imgs[i]).max()]==1)
+                good++;
+        }
+        std::cout << "evaluated: " << good << "/" << test_data.size();
+    }
+    std::cout << std::endl;
+    
+    nn.train(20, 3, training_data, 10, test_data);
+    
+
 }

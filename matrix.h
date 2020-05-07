@@ -15,7 +15,7 @@ struct vector{
     
     int n;
     
-    unique_ptr<T[]> data;
+    std::unique_ptr<T[]> data;
 
     vector(const int _n){
         init(_n);
@@ -53,7 +53,7 @@ struct vector{
 
     vector<T>& init(const int _n){
         n=_n;
-        data = make_unique<T[]>(std::size_t(n));
+        data = std::make_unique<T[]>(std::size_t(n));
 		return *this;
     }
 
