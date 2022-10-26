@@ -1,4 +1,3 @@
 # practiceAI
 
-My take on AI based on neuralnetworksanddeeplearning.com
-
+A neural network based handwritten digit classifier
